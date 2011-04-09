@@ -20,6 +20,8 @@
 #include <common.h>
 #ifdef CONFIG_MX31
 #include <asm/arch/mx31.h>
+#elif defined(CONFIG_MX35)
+#include <asm/arch/mx35.h>
 #else
 #include <asm/arch/imx-regs.h>
 #include <asm/arch/clock.h>
@@ -27,11 +29,11 @@
 
 #define __REG(x)     (*((volatile u32 *)(x)))
 
-#if defined(CONFIG_SYS_MX31_UART1) || defined(CONFIG_SYS_MX25_UART1)
+#if defined(CONFIG_SYS_MX31_UART1) || defined(CONFIG_SYS_MX25_UART1) || defined(CONFIG_SYS_MX35_UART1)
 #define UART_PHYS 0x43f90000
-#elif defined(CONFIG_SYS_MX31_UART2) || defined(CONFIG_SYS_MX25_UART2)
+#elif defined(CONFIG_SYS_MX31_UART2) || defined(CONFIG_SYS_MX25_UART2) || defined(CONFIG_SYS_MX35_UART2)
 #define UART_PHYS 0x43f94000
-#elif defined(CONFIG_SYS_MX31_UART3) || defined(CONFIG_SYS_MX25_UART3)
+#elif defined(CONFIG_SYS_MX31_UART3) || defined(CONFIG_SYS_MX25_UART3) || defined(CONFIG_SYS_MX35_UART3)
 #define UART_PHYS 0x5000c000
 #elif defined(CONFIG_SYS_MX31_UART4) || defined(CONFIG_SYS_MX25_UART4)
 #define UART_PHYS 0x43fb0000

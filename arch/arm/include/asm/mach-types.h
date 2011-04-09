@@ -2862,6 +2862,7 @@ extern unsigned int __machine_arch_type;
 #define MACH_TYPE_MATRIX518            2879
 #define MACH_TYPE_TINY_GURNARD         2880
 #define MACH_TYPE_SPEAR1310            2881
+#define MACH_TYPE_TQMA35               3154
 
 #ifdef CONFIG_ARCH_EBSA110
 # ifdef machine_arch_type
@@ -37061,6 +37062,18 @@ extern unsigned int __machine_arch_type;
 # define machine_is_spear1310()	(machine_arch_type == MACH_TYPE_SPEAR1310)
 #else
 # define machine_is_spear1310()	(0)
+#endif
+
+#ifdef CONFIG_MACH_TQMA35
+# ifdef machine_arch_type
+#  undef machine_arch_type
+#  define machine_arch_type	__machine_arch_type
+# else
+#  define machine_arch_type	MACH_TYPE_TQMA35
+# endif
+# define machine_is_tqma35()	(machine_arch_type == MACH_TYPE_TQMA35)
+#else
+# define machine_is_tqma35()	(0)
 #endif
 
 /*

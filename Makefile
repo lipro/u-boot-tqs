@@ -3315,6 +3315,20 @@ mx31pdk_nand_config	: unconfig
 mx51evk_config	: unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm_cortexa8 mx51evk freescale mx51
 
+TQMa35_AA_config \
+TQMa35_AB_config \
+TQMa35_config	: unconfig
+	@mkdir -p $(obj)include
+	@[ -z "$(findstring _AA_,$@)" ] || \
+		{ echo "#define CONFIG_TQMA35_AA 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35-AA 128 MiB mDDR" ; \
+		}
+	@[ -z "$(findstring _AB_,$@)" ] || \
+		{ echo "#define CONFIG_TQMA35_AB 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35-AB 256 MiB mDDR" ; \
+		}
+	@$(MKCONFIG) -n $@ -a TQMa35 arm arm1136 tqma35 tqc mx35
+
 omap2420h4_config	: unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm1136 omap2420h4 ti omap24xx
 
