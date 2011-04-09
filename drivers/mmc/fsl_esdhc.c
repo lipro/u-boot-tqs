@@ -484,13 +484,22 @@ int fsl_esdhc_initialize(bd_t *bis, struct fsl_esdhc_cfg *cfg)
 	return 0;
 }
 
+#ifndef CONFIG_SYS_FSL_ESDHC_ADDR
+extern u32 *imx_esdhc_base_addr;
+#endif
+
 int fsl_esdhc_mmc_init(bd_t *bis)
 {
+#ifdef CONFIG_SYS_FSL_ESDHC_ADDR
+	struct fsl_esdhc *regs = (struct fsl_esdhc *)CONFIG_SYS_IMX_ESDHC_ADDR;
+#else
+	struct fsl_esdhc *regs = (struct fsl_esdhc *)imx_esdhc_base_addr;
+#endif
 	struct fsl_esdhc_cfg *cfg;
 
 	cfg = malloc(sizeof(struct fsl_esdhc_cfg));
 	memset(cfg, 0, sizeof(struct fsl_esdhc_cfg));
-	cfg->esdhc_base = CONFIG_SYS_FSL_ESDHC_ADDR;
+	cfg->esdhc_base = (u32)regs;//CONFIG_SYS_FSL_ESDHC_ADDR;
 	return fsl_esdhc_initialize(bis, cfg);
 }
 

@@ -35,6 +35,11 @@
 #include <asm/arch/mmu.h>
 #endif
 
+#ifdef CONFIG_CMD_MMC
+#include <mmc.h>
+#include <fsl_esdhc.h>
+#endif
+
 DECLARE_GLOBAL_DATA_PTR;
 
 static u32 system_rev;
@@ -140,6 +145,121 @@ int dram_init(void)
 
 	return 0;
 }
+
+#ifdef CONFIG_CMD_MMC
+
+#define EMMC_PAD_CTL1 (PAD_CTL_47K_PU | PAD_CTL_PUE_PUD | \
+			PAD_CTL_HYS_SCHMITZ | PAD_CTL_DRV_HIGH | \
+			PAD_CTL_PKE_ENABLE | PAD_CTL_SRE_FAST)
+
+u32 *imx_esdhc_base_addr;
+
+int esdhc_gpio_init(u32  interface_esdhc)
+{
+	switch (interface_esdhc) {
+	case 0:
+		imx_esdhc_base_addr = (u32 *)MMC_SDHC1_BASE_ADDR;
+
+		/* Pins */
+		mxc_request_iomux(MX35_PIN_SD1_CMD,
+			MUX_CONFIG_FUNC | MUX_CONFIG_SION);
+
+		/* D0 ..D3 */
+		mxc_request_iomux(MX35_PIN_SD1_CLK,
+			MUX_CONFIG_FUNC | MUX_CONFIG_SION);
+
+		mxc_request_iomux(MX35_PIN_SD1_DATA0,
+			MUX_CONFIG_FUNC);
+
+		mxc_request_iomux(MX35_PIN_SD1_DATA1,
+			MUX_CONFIG_FUNC);
+
+		mxc_request_iomux(MX35_PIN_SD1_DATA2,
+			MUX_CONFIG_FUNC);
+
+		mxc_request_iomux(MX35_PIN_SD1_DATA3,
+			MUX_CONFIG_FUNC);
+
+		/* Pads */
+		mxc_iomux_set_pad(MX35_PIN_SD1_CMD, EMMC_PAD_CTL1);
+		mxc_iomux_set_pad(MX35_PIN_SD1_CLK, EMMC_PAD_CTL1);
+		mxc_iomux_set_pad(MX35_PIN_SD1_DATA0, EMMC_PAD_CTL1);
+		mxc_iomux_set_pad(MX35_PIN_SD1_DATA1, EMMC_PAD_CTL1);
+		mxc_iomux_set_pad(MX35_PIN_SD1_DATA2, EMMC_PAD_CTL1);
+		mxc_iomux_set_pad(MX35_PIN_SD1_DATA3, EMMC_PAD_CTL1);
+
+		break;
+	case 1:
+		imx_esdhc_base_addr = (u32 *)MMC_SDHC3_BASE_ADDR;
+
+			/* SD3_CMD */
+			mxc_request_iomux(MX35_PIN_ATA_DATA4,
+				  MUX_CONFIG_ALT1 | MUX_CONFIG_SION);
+			/* SD3_CLK */
+			mxc_request_iomux(MX35_PIN_ATA_DATA3,
+				  MUX_CONFIG_ALT1 | MUX_CONFIG_SION);
+			/* SD3_DAT0 */
+			mxc_request_iomux(MX35_PIN_ATA_DIOR, MUX_CONFIG_ALT1);
+			/* SD3_DATA1 */
+			mxc_request_iomux(MX35_PIN_ATA_DIOW, MUX_CONFIG_ALT1);
+			/* SD3_DATA2 */
+			mxc_request_iomux(MX35_PIN_ATA_DMACK, MUX_CONFIG_ALT1);
+			/* SD3_DATA3 */
+			mxc_request_iomux(MX35_PIN_ATA_RESET_B,
+				MUX_CONFIG_ALT1);
+
+			/* SD3_DATA4 */
+			mxc_request_iomux(MX35_PIN_ATA_IORDY,
+				MUX_CONFIG_ALT1);
+			/* SD3_DATA5 */
+			mxc_request_iomux(MX35_PIN_ATA_DATA0,
+				MUX_CONFIG_ALT1);
+			/* SD3_DATA6 */
+			mxc_request_iomux(MX35_PIN_ATA_DATA1,
+				MUX_CONFIG_ALT1);
+			/* SD3_DATA7 */
+			mxc_request_iomux(MX35_PIN_ATA_DATA2,
+				MUX_CONFIG_ALT1);
+
+			mxc_iomux_set_pad(MX35_PIN_ATA_DATA4, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DATA3, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DIOR, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DIOW, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DMACK, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_RESET_B, EMMC_PAD_CTL1);
+
+			mxc_iomux_set_pad(MX35_PIN_ATA_IORDY, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DATA0, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DATA1, EMMC_PAD_CTL1);
+			mxc_iomux_set_pad(MX35_PIN_ATA_DATA2, EMMC_PAD_CTL1);
+
+			mxc_iomux_set_input(MUX_IN_ESDHC3_CARD_CLK_IN, INPUT_CTL_PATH1);
+			mxc_iomux_set_input(MUX_IN_ESDHC3_CMD_IN, INPUT_CTL_PATH1);
+			mxc_iomux_set_input(MUX_IN_ESDHC3_DAT0, INPUT_CTL_PATH1);
+			mxc_iomux_set_input(MUX_IN_ESDHC3_DAT1, INPUT_CTL_PATH1);
+			mxc_iomux_set_input(MUX_IN_ESDHC3_DAT2, INPUT_CTL_PATH1);
+			mxc_iomux_set_input(MUX_IN_ESDHC3_DAT3, INPUT_CTL_PATH1);
+
+		break;
+
+	default:
+		return 1;
+		break;
+	}
+	return 0;
+}
+
+int board_mmc_init(void)
+{
+	esdhc_gpio_init(0);
+	fsl_esdhc_mmc_init(gd->bd);
+
+	esdhc_gpio_init(1);
+	fsl_esdhc_mmc_init(gd->bd);
+
+	return 0;
+}
+#endif
 
 int board_init(void)
 {

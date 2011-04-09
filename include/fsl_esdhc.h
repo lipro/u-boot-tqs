@@ -91,6 +91,7 @@
 #define PRSSTAT_CINS		(0x00010000)
 #define PRSSTAT_BREN		(0x00000800)
 #define PRSSTAT_BWEN		(0x00000400)
+#define PRSSTAT_SDSTB		(0x00000008)
 #define PRSSTAT_DLA		(0x00000004)
 #define PRSSTAT_CICHB		(0x00000002)
 #define PRSSTAT_CIDHB		(0x00000001)
@@ -172,7 +173,7 @@ struct fsl_esdhc_cfg {
 #error "Endianess is not defined: please fix to continue"
 #endif
 
-#ifdef CONFIG_FSL_ESDHC
+#if defined(CONFIG_FSL_ESDHC) || defined(CONFIG_IMX_MMC)
 int fsl_esdhc_mmc_init(bd_t *bis);
 int fsl_esdhc_initialize(bd_t *bis, struct fsl_esdhc_cfg *cfg);
 void fdt_fixup_esdhc(void *blob, bd_t *bd);

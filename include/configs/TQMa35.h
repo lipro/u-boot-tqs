@@ -93,6 +93,18 @@
 
 #define CONFIG_CMD_I2C
 #define CONFIG_CMD_MII
+#define CONFIG_CMD_MMC
+
+/*
+ * MMC Configs
+ * */
+#ifdef CONFIG_CMD_MMC
+	#define CONFIG_MMC				1
+	#define CONFIG_GENERIC_MMC
+	#define CONFIG_IMX_MMC
+	#define CONFIG_DOS_PARTITION	1
+	#define CONFIG_CMD_FAT		1
+#endif
 
 #define CONFIG_BOOTDELAY	3
 
