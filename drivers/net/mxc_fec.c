@@ -565,6 +565,20 @@ void dbgFecRegs(struct eth_device *dev)
 }
 #endif
 
+static int fec_write_hwaddr(struct eth_device *dev)
+{
+	struct fec_info_s *info = dev->priv;
+	volatile fec_t *fecp = (fec_t *) (info->iobase);
+	u8 *ea = NULL;
+
+	/* Set station address   */
+	ea = dev->enetaddr;
+	fecp->palr = (ea[0] << 24) | (ea[1] << 16) | (ea[2] << 8) | (ea[3]);
+	fecp->paur = (ea[4] << 24) | (ea[5] << 16);
+
+	return 0;
+}
+
 int fec_init(struct eth_device *dev, bd_t *bd)
 {
 	struct fec_info_s *info = dev->priv;
@@ -681,6 +695,16 @@ void fec_halt(struct eth_device *dev)
 	memset(info->txbuf, 0, DBUF_LENGTH);
 }
 
+static void mxc_fec_set_mac(struct fec_info_s *fec_info)
+{
+	unsigned char ea[6];
+	volatile fec_t *fecp = (fec_t *)(fec_info->iobase);
+
+	memcpy(ea, eth_get_dev()->enetaddr, 6);
+	fecp->palr = (ea[0] << 24) | (ea[1] << 16) | (ea[2] << 8) | (ea[3]);
+	fecp->paur = (ea[4] << 24) | (ea[5] << 16);
+}
+
 int mxc_fec_initialize(bd_t *bis)
 {
 	struct eth_device *dev;
@@ -702,6 +726,7 @@ int mxc_fec_initialize(bd_t *bis)
 		dev->halt = fec_halt;
 		dev->send = fec_send;
 		dev->recv = fec_recv;
+		dev->write_hwaddr = fec_write_hwaddr;
 
 		/* setup Receive and Transmit buffer descriptor */
 		fec_info[i].rxbd =
@@ -726,6 +751,8 @@ int mxc_fec_initialize(bd_t *bis)
 		miiphy_register(dev->name, mxc_fec_mii_read, mxc_fec_mii_write);
 #endif
 	}
+
+	mxc_fec_set_mac(&fec_info);
 
 	return 1;
 }
