@@ -37,7 +37,7 @@ void pkt_data_push(struct eth_device *dev, u32 addr, u32 val) \
 
 #define mdelay(n)       udelay((n)*1000)
 
-static void smc911x_handle_mac_address(struct eth_device *dev)
+static int smc911x_handle_mac_address(struct eth_device *dev)
 {
 	unsigned long addrh, addrl;
 	uchar *m = dev->enetaddr;
@@ -47,7 +47,7 @@ static void smc911x_handle_mac_address(struct eth_device *dev)
 	smc911x_set_mac_csr(dev, ADDRL, addrl);
 	smc911x_set_mac_csr(dev, ADDRH, addrh);
 
-	printf(DRIVERNAME ": MAC %pM\n", m);
+	return 0;
 }
 
 static int smc911x_miiphy_read(struct eth_device *dev,
@@ -270,6 +270,7 @@ int smc911x_initialize(u8 dev_num, int base_addr)
 	dev->halt = smc911x_halt;
 	dev->send = smc911x_send;
 	dev->recv = smc911x_rx;
+	dev->write_hwaddr = smc911x_handle_mac_address;
 	sprintf(dev->name, "%s-%hu", DRIVERNAME, dev_num);
 
 	eth_register(dev);

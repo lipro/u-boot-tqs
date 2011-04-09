@@ -175,6 +175,20 @@
         ble 1b
 .endm /* init_drive_strength */
 
+/* SMSC on CS1 setup */
+.macro init_debug_board
+        ldr r0, =DBG_BASE_ADDR
+        ldr r1, =DBG_CSCR_U_CONFIG
+        str r1, [r0, #0x00]
+        ldr r1, =DBG_CSCR_L_CONFIG
+        str r1, [r0, #0x04]
+        ldr r1, =DBG_CSCR_A_CONFIG
+        str r1, [r0, #0x08]
+        ldr r0, =WEIM_BASE_ADDR
+        ldr r1, =WEIM_WCR_00000200
+        str r1, [r0, #0x60]
+.endm /* init_debug_board */
+
 /* clock setup */
 .macro init_clock
 	ldr r0, =CCM_BASE_ADDR
@@ -331,6 +345,8 @@ lowlevel_init:
 	init_drive_strength
 
 	init_clock
+
+	init_debug_board
 
 	cmp pc, #PHYS_SDRAM_1
 	blo init_sdram_start
