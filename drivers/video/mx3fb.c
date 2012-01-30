@@ -22,8 +22,13 @@
  */
 #include <common.h>
 #include <lcd.h>
+#ifdef CONFIG_MX31
 #include <asm/arch/mx31.h>
 #include <asm/arch/mx31-regs.h>
+#endif
+#ifdef CONFIG_MX35
+#include <asm/arch/mx35.h>
+#endif
 #include <asm/errno.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -176,7 +181,11 @@ static struct pixel_fmt_cfg fmt_cfg[] = {
 		0x1600AAAA, 0x00E05555, 0x00070000, 3,
 	},
 	[IPU_PIX_FMT_RGB666] = {
+#ifdef CONFIG_MX35
+		0x00050000, 0x000D0000, 0x00150000, 1,
+#else
 		0x0005000F, 0x000B000F, 0x0011000F, 1,
+#endif
 	},
 	[IPU_PIX_FMT_BGR666] = {
 		0x0011000F, 0x000B000F, 0x0005000F, 1,
@@ -773,6 +782,7 @@ void lcd_enable(void)
 
 	/* pcm037.c::mxc_board_init() */
 
+#ifdef CONFIG_MX31
 	/* Display Interface #3 */
 	mx31_gpio_mux(IOMUX_MODE_L(MX31_PIN_LD0, MUX_CTL_FUNC));
 	mx31_gpio_mux(IOMUX_MODE_L(MX31_PIN_LD1, MUX_CTL_FUNC));
@@ -800,13 +810,17 @@ void lcd_enable(void)
 	mx31_gpio_mux(IOMUX_MODE_L(MX31_PIN_CONTRAST, MUX_CTL_FUNC));
 	mx31_gpio_mux(IOMUX_MODE_L(MX31_PIN_D3_SPL, MUX_CTL_FUNC));
 	mx31_gpio_mux(IOMUX_MODE_L(MX31_PIN_D3_CLS, MUX_CTL_FUNC));
-
+#endif
 
 	/* ipu_idmac.c::ipu_probe() */
 
 	/* Start the clock */
+#ifdef CONFIG_MX35
+	__REG(CCM_BASE_ADDR + CLKCTL_CGR1) =
+				__REG(CCM_BASE_ADDR + CLKCTL_CGR1) | (3 << 18);
+#else
 	__REG(CCM_CGR1) = __REG(CCM_CGR1) | (3 << 22);
-
+#endif
 
 	/* ipu_idmac.c::ipu_idmac_init() */
 
