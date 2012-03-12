@@ -145,6 +145,12 @@
 			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
 			"setenv filesize; saveenv\0"
 
+/*
+ * add version variable to env - enables inclusion of
+ * version info in flash env and reading from linux
+ */
+#define CONFIG_VERSION_VARIABLE
+
 /* EEPROM */
 #define CONFIG_SYS_I2C_EEPROM_ADDR      0x50            /* EEPROM AT24C256      */
 #define CONFIG_SYS_I2C_EEPROM_ADDR_LEN 2
