@@ -72,8 +72,12 @@
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
 
-#define CONFIG_MXC_UART         1
-#define CONFIG_SYS_MX35_UART3   1
+#define CONFIG_MXC_UART		1
+#if defined(CONFIG_TQMA35_TTYS0)
+#define CONFIG_SYS_MX35_UART1	1
+#else
+#define CONFIG_SYS_MX35_UART3	1
+#endif
 #define CONFIG_CONS_INDEX	1
 #define CONFIG_BAUDRATE		115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{9600, 19200, 38400, 57600, 115200}
@@ -110,6 +114,42 @@
 
 #define CONFIG_LOADADDR		0x80800000	/* loadaddr env var */
 
+#if defined(CONFIG_TQMA35_TTYS0)
+#define CONFIG_EXTRA_ENV_SETTINGS					\
+		"hostname=tqma35\0"					\
+		"netdev=eth0\0"						\
+		"console=ttymxc0\0"					\
+		"uboot_addr=0xa0000000\0"				\
+		"kernel_addr=0xa0080000\0"				\
+		"ramdisk_addr=0xa0300000\0"				\
+		"uboot=u-boot.bin\0"					\
+		"kernel=uImage\0"					\
+		"rootpath=/opt/ltib/rootfs\0"				\
+		"nfsargs=setenv bootargs root=/dev/nfs rw "		\
+			"nfsroot=${serverip}:${rootpath},v3,tcp\0"	\
+		"jffsargs=setenv bootargs root=/dev/mtdblock3 rw "	\
+			"rootfstype=jffs2\0"				\
+		"addip=setenv bootargs ${bootargs} "			\
+			"ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}"\
+			":${hostname}:${netdev}:off panic=1\0"		\
+		"addcons=setenv bootargs ${bootargs} "			\
+			"console=${console},${baudrate}\0"		\
+		"bootargs_base=setenv bootargs console=ttymxc0,115200\0"\
+		"bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs "\
+			"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0"\
+		"bootcmd=run net_nfs\0"					\
+		"flash_nfs=run nfsargs addip addcons;"			\
+			"bootm ${kernel_addr}\0"			\
+		"net_nfs=run nfsargs addip addcons; "			\
+			"tftpboot ${loadaddr} ${kernel}; bootm\0"	\
+		"flash_jffs=run jffsargs addip addcons;"		\
+			"bootm ${kernel_addr}\0"			\
+		"prg_uboot=tftpboot ${loadaddr} ${uboot}; "		\
+			"protect off ${uboot_addr} 0xa003ffff; "	\
+			"erase ${uboot_addr} 0xa003ffff; "		\
+			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
+			"setenv filesize; saveenv\0"
+#else
 #define	CONFIG_EXTRA_ENV_SETTINGS					\
 		"hostname=tqma35\0"					\
 		"netdev=eth0\0"						\
@@ -145,7 +185,7 @@
 			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
 			"setenv filesize; saveenv\0"			\
 		"splashimage=A0A00000\0"
-
+#endif
 /*
  * add version variable to env - enables inclusion of
  * version info in flash env and reading from linux
