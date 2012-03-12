@@ -287,6 +287,65 @@ int board_init(void)
 	mxc_iomux_set_pad(MX35_PIN_I2C1_CLK, pad);
 	mxc_iomux_set_pad(MX35_PIN_I2C1_DAT, pad);
 
+	/* setup pins for LCD */
+	pad = (PAD_CTL_HYS_CMOS | PAD_CTL_DRV_NORMAL | PAD_CTL_PKE_NONE \
+		| PAD_CTL_100K_PD | PAD_CTL_ODE_CMOS | PAD_CTL_DRV_3_3V \
+		| PAD_CTL_PUE_PUD | PAD_CTL_SRE_FAST);
+
+	mxc_request_iomux(MX35_PIN_LD0, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD1, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD2, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD3, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD4, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD5, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD6, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD7, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD8, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD9, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD10, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD11, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD12, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD13, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD14, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD15, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD16, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_LD17, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_VSYNC, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_HSYNC, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_FPSHIFT, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_DRDY, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_REV, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_CONTRAST, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_SPL, MUX_CONFIG_FUNC);
+	mxc_request_iomux(MX35_PIN_D3_CLS, MUX_CONFIG_FUNC);
+
+	mxc_iomux_set_pad(MX35_PIN_LD0, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD1, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD2, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD3, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD4, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD5, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD6, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD7, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD8, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD9, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD10, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD11, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD12, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD13, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD14, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD15, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD16, pad);
+	mxc_iomux_set_pad(MX35_PIN_LD17, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_VSYNC, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_HSYNC, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_FPSHIFT, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_DRDY, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_REV, pad);
+	mxc_iomux_set_pad(MX35_PIN_CONTRAST, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_SPL, pad);
+	mxc_iomux_set_pad(MX35_PIN_D3_CLS, pad);
+
 	/* setup pins for FEC */
 	mxc_request_iomux(MX35_PIN_FEC_TX_CLK, MUX_CONFIG_FUNC);
 	mxc_request_iomux(MX35_PIN_FEC_RX_CLK, MUX_CONFIG_FUNC);

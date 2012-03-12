@@ -143,7 +143,8 @@
 			"protect off ${uboot_addr} 0xa003ffff; "	\
 			"erase ${uboot_addr} 0xa003ffff; "		\
 			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
-			"setenv filesize; saveenv\0"
+			"setenv filesize; saveenv\0"			\
+		"splashimage=A0A00000\0"
 
 /*
  * add version variable to env - enables inclusion of
@@ -295,5 +296,16 @@
 #define CONFIG_FLASH_CFI_MTD
 #define MTDPARTS_DEFAULT	"mtdparts=nor0:256k(u-boot),256k(env),2560k(kernel),-(jffs2)"
 
+/*
+ * LCD configuration
+ */
+#define CONFIG_LCD				1
+#define CONFIG_VIDEO_MX3			1
+#define LCD_BPP					LCD_COLOR16
+#define CONFIG_DISPLAY_FG0700			1
+#define CONFIG_SPLASH_SCREEN			1
+#define CONFIG_CMD_BMP				1
+#define CONFIG_SYS_CONSOLE_IS_IN_ENV		1
+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE	1
 
 #endif				/* __CONFIG_H */
