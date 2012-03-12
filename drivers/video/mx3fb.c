@@ -61,6 +61,13 @@ void lcd_panel_disable(void)
 
 #define msleep(a) udelay(a * 1000)
 
+/* support variable / inverse brightness */
+#ifdef CONFIG_PWM_BRIGHTNESS
+#define PWM_BRIGHTNESS CONFIG_PWM_BRIGHTNESS
+#else
+#define PWM_BRIGHTNESS 255
+#endif
+
 #if defined(CONFIG_DISPLAY_VBEST_VGG322403)
 #define XRES		320
 #define YRES		240
@@ -875,7 +882,7 @@ void lcd_enable(void)
 	/* mx3fb.c::sdc_set_brightness() */
 
 	/* This might be board-specific */
-	reg_write(0x03000000UL | 255 << 16, SDC_PWM_CTRL);
+	reg_write(0x03000000UL | PWM_BRIGHTNESS << 16, SDC_PWM_CTRL);
 
 
 	/* mx3fb.c::sdc_set_global_alpha() */
