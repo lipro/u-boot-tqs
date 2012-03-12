@@ -91,6 +91,21 @@ void lcd_panel_disable(void)
 #define SIG_POL		(DI_D3_DRDY_SHARP_POL | DI_D3_CLK_POL)
 #define IF_CONF		0
 #define IF_CLK_DIV	0x175
+#elif defined(CONFIG_DISPLAY_FG0700)
+#define XRES		800
+#define YRES		480
+#define PANEL_TYPE	IPU_PANEL_TFT
+#define PIXEL_CLK	30066		/* pixel clock period in fs */
+#define PIXEL_FMT	IPU_PIX_FMT_RGB666
+#define H_START_WIDTH	128		/* left_margin */
+#define H_SYNC_WIDTH	1		/* hsync_len */
+#define H_END_WIDTH	(90 + H_SYNC_WIDTH)	/* right_margin + hsync_len */
+#define V_START_WIDTH	10		/* upper_margin */
+#define V_SYNC_WIDTH	1		/* vsync_len */
+#define V_END_WIDTH	(35 + V_SYNC_WIDTH)	/* lower_margin + vsync_len */
+#define SIG_POL		(DI_D3_DRDY_SHARP_POL | DI_D3_CLK_POL)
+#define IF_CONF		0
+#define IF_CLK_DIV	64 /* (133000000(=HSP_CLK) * 16 * PIXEL_CLK * 10e-12) */
 #else
 #define XRES		240
 #define YRES		320
