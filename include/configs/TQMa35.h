@@ -63,11 +63,13 @@
 /*
  * Hardware drivers
  */
+#ifndef CONFIG_TQMA35_UBI
 #define CONFIG_HARD_I2C		1
 #define CONFIG_I2C_MXC		1
 #define CONFIG_SYS_I2C_PORT		I2C2_BASE_ADDR
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		0xfe
+#endif
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
@@ -91,11 +93,14 @@
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP
 
+#ifndef CONFIG_TQMA35_UBI
 #define CONFIG_CMD_DATE
 #define CONFIG_CMD_DTT
 #define CONFIG_CMD_EEPROM
 
 #define CONFIG_CMD_I2C
+#endif
+
 #define CONFIG_CMD_MII
 #define CONFIG_CMD_MMC
 
@@ -192,6 +197,7 @@
  */
 #define CONFIG_VERSION_VARIABLE
 
+#ifndef CONFIG_TQMA35_UBI
 /* EEPROM */
 #define CONFIG_SYS_I2C_EEPROM_ADDR      0x50            /* EEPROM AT24C256      */
 #define CONFIG_SYS_I2C_EEPROM_ADDR_LEN 2
@@ -208,6 +214,7 @@
 #define CONFIG_SYS_DTT_MAX_TEMP 70
 #define CONFIG_SYS_DTT_LOW_TEMP -30
 #define CONFIG_SYS_DTT_HYSTERESIS       3
+#endif
 
 /*Support LAN9217*/
 #define CONFIG_SMC911X	1
@@ -334,6 +341,7 @@
 /* default partition scheme */
 #define MTDPARTS_DEFAULT	"mtdparts=physmap-flash.0:256k(u-boot),256k(env),2560k(kernel),-(jffs2)"
 
+#ifndef CONFIG_TQMA35_UBI
 /*
  * LCD configuration
  */
@@ -348,5 +356,26 @@
 #define CONFIG_CMD_BMP				1
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV		1
 #define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE	1
+#endif
+
+#ifdef CONFIG_TQMA35_UBI
+
+#define CONFIG_MTD_PARTITIONS
+#define CONFIG_CMD_UBI
+#define CONFIG_CMD_UBIFS
+#define CONFIG_RBTREE
+#define CONFIG_LZO
+#define CONFIG_SYS_USE_UBI
+
+#undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
+#undef CONFIG_CMD_ITEST	/* Integer (and string) test	*/
+#undef CONFIG_CMD_LOADB	/* loadb			*/
+#undef CONFIG_CMD_LOADS	/* loads			*/
+#undef CONFIG_CMD_MISC		/* Misc functions like sleep etc*/
+#undef CONFIG_CMD_SETGETDCR	/* DCR support on 4xx		*/
+#undef CONFIG_CMD_SOURCE	/* "source" command support	*/
+#undef CONFIG_AUTO_COMPLETE
+#undef CONFIG_SYS_LONGHELP
+#endif
 
 #endif				/* __CONFIG_H */
