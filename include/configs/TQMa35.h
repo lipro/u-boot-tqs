@@ -283,18 +283,16 @@
 #define CONFIG_SYS_FLASH_USE_BUFFER_WRITE 1/* Use buffered writes (~10x faster) */
 #define CONFIG_SYS_FLASH_PROTECTION	1/* Use hardware sector protection */
 
-/*
- * JFFS2 partitions
+/*-----------------------------------------------------------------------
+ * MTD (JFFS2) partitions
  */
-#undef CONFIG_JFFS2_CMDLINE
-#define CONFIG_JFFS2_DEV	"nor0"
-
-/* mtdparts command line support */
-#define CONFIG_CMD_MTDPARTS
-#define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
-#define MTDIDS_DEFAULT		"nor0=nor0"
-#define CONFIG_FLASH_CFI_MTD
-#define MTDPARTS_DEFAULT	"mtdparts=nor0:256k(u-boot),256k(env),2560k(kernel),-(jffs2)"
+#define CONFIG_CMD_MTDPARTS	/* mtdparts command line support */
+#define CONFIG_MTD_DEVICE	/* needed for mtdparts commands */
+#define CONFIG_FLASH_CFI_MTD	/* MTD driver layer */
+/* default mapping u-boot -> linux */
+#define MTDIDS_DEFAULT		"nor0=physmap-flash.0"
+/* default partition scheme */
+#define MTDPARTS_DEFAULT	"mtdparts=physmap-flash.0:256k(u-boot),256k(env),2560k(kernel),-(jffs2)"
 
 /*
  * LCD configuration
