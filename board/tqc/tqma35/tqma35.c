@@ -29,6 +29,7 @@
 #include <asm/arch/mx35_pins.h>
 #include <asm/arch/iomux.h>
 #include <i2c.h>
+#include <netdev.h>
 
 #ifdef CONFIG_ARCH_MMU
 #include <asm/mmu.h>
@@ -546,8 +547,7 @@ extern int smc911x_initialize(u8 dev_num, int base_addr);
 int board_eth_init(bd_t *bis)
 {
 	int rc = -ENODEV;
-
-	cpu_eth_init(bis);
+	rc = cpu_eth_init(bis);
 
 #if defined(CONFIG_SMC911X)
 	rc = smc911x_initialize(0, CONFIG_SMC911X_BASE);
