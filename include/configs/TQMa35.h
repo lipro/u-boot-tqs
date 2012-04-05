@@ -216,16 +216,21 @@
 #define CONFIG_SYS_DTT_HYSTERESIS       3
 #endif
 
-/*Support LAN9217*/
+/*Support LAN9118*/
+#ifdef CONFIG_TQMA35_USE_SMC9118
 #define CONFIG_SMC911X	1
 #define CONFIG_SMC911X_16_BIT 1
 #define CONFIG_SMC911X_BASE CS1_BASE_ADDR
-
+#endif
 /*
  * Ethernet
  */
+#define CONFIG_HAS_ETH0
+#ifdef CONFIG_TQMA35_USE_SMC9118
 #define CONFIG_HAS_ETH1
+#endif
 #define CONFIG_NET_MULTI 1
+
 #define CONFIG_MXC_FEC
 #define CONFIG_MII
 #define CONFIG_DISCOVER_PHY

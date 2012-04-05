@@ -3319,8 +3319,17 @@ TQMa35_AA_TTYS0_config \
 TQMa35_AB_TTYS0_config \
 TQMa35_AA_config \
 TQMa35_AB_config \
+TQMa35_MBa35CA_config \
 TQMa35_config	: unconfig
 	@mkdir -p $(obj)include
+	@[ -z "$(findstring _MBa35CA_,$@)" ] || \
+		{ echo "#define CONFIG_TQMA35_TTYS0 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 TTYS0" ; \
+		  echo "#define CONFIG_TQMA35_AB 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35-AB 256 MiB mDDR" ; \
+		  echo "#define CONFIG_TQMA35_MBA35CA 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 MBA35-CA mainboard" ; \
+		}
 	@[ -z "$(findstring _TTYS0_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_TTYS0 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35 TTYS0" ; \
@@ -3328,10 +3337,14 @@ TQMa35_config	: unconfig
 	@[ -z "$(findstring _AA_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_AA 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35-AA 128 MiB mDDR" ; \
+		  echo "#define CONFIG_TQMA35_USE_SMC9118 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 SMC9118" ; \
 		}
 	@[ -z "$(findstring _AB_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_AB 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35-AB 256 MiB mDDR" ; \
+		  echo "#define CONFIG_TQMA35_USE_SMC9118 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 SMC9118" ; \
 		}
 	@$(MKCONFIG) -n $@ -a TQMa35 arm arm1136 tqma35 tqc mx35
 
