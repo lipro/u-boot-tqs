@@ -120,13 +120,25 @@
 #define CONFIG_LOADADDR		0x80800000	/* loadaddr env var */
 
 #if defined(CONFIG_TQMA35_TTYS0)
+#define ENV_CONSOLE "console=ttymxc0\0"
+#else
+#define ENV_CONSOLE "console=ttymxc2\0"
+#endif
+
+#define ENV_KERNEL_ADDR "kernel_addr=0xa0080000\0"
+#define ENV_RAMDSK_ADDR "ramdisk_addr=0xa0300000\0"
+#define ENV_UNPROTECT_UBOOT "protect off ${uboot_addr} 0xa003ffff; "
+#define ENV_ERASE_UBOOT "erase ${uboot_addr} 0xa003ffff; "
+#define ENV_UNPROTECT_KERNEL "protect off ${kernel_addr} 0xa02fffff; "
+#define ENV_ERASE_KERNEL "erase ${kernel_addr} 0xa02fffff; "
+
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 		"hostname=tqma35\0"					\
 		"netdev=eth0\0"						\
-		"console=ttymxc0\0"					\
+		ENV_CONSOLE						\
 		"uboot_addr=0xa0000000\0"				\
-		"kernel_addr=0xa0080000\0"				\
-		"ramdisk_addr=0xa0300000\0"				\
+		ENV_KERNEL_ADDR						\
+		ENV_RAMDSK_ADDR						\
 		"uboot=u-boot.bin\0"					\
 		"kernel=uImage\0"					\
 		"rootpath=/opt/ltib/rootfs\0"				\
@@ -150,47 +162,17 @@
 		"flash_jffs=run jffsargs addip addcons;"		\
 			"bootm ${kernel_addr}\0"			\
 		"prg_uboot=tftpboot ${loadaddr} ${uboot}; "		\
-			"protect off ${uboot_addr} 0xa003ffff; "	\
-			"erase ${uboot_addr} 0xa003ffff; "		\
-			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
-			"setenv filesize; saveenv\0"
-#else
-#define	CONFIG_EXTRA_ENV_SETTINGS					\
-		"hostname=tqma35\0"					\
-		"netdev=eth0\0"						\
-		"console=ttymxc2\0"					\
-		"uboot_addr=0xa0000000\0"				\
-		"kernel_addr=0xa0080000\0"				\
-		"ramdisk_addr=0xa0300000\0"				\
-		"uboot=u-boot.bin\0"					\
-		"kernel=uImage\0"					\
-		"rootpath=/opt/ltib/rootfs\0"				\
-		"nfsargs=setenv bootargs root=/dev/nfs rw "		\
-			"nfsroot=${serverip}:${rootpath},v3,tcp\0"	\
-		"jffsargs=setenv bootargs root=/dev/mtdblock3 rw "	\
-			"rootfstype=jffs2\0"				\
-		"addip=setenv bootargs ${bootargs} "			\
-			"ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}"\
-			":${hostname}:${netdev}:off panic=1\0"		\
-		"addcons=setenv bootargs ${bootargs} "			\
-			"console=${console},${baudrate}\0"		\
-		"bootargs_base=setenv bootargs console=ttymxc2,115200\0"\
-		"bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs "\
-			"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0"\
-		"bootcmd=run net_nfs\0"					\
-		"flash_nfs=run nfsargs addip addcons;"			\
-			"bootm ${kernel_addr}\0"			\
-		"net_nfs=run nfsargs addip addcons; "			\
-			"tftpboot ${loadaddr} ${kernel}; bootm\0"	\
-		"flash_jffs=run jffsargs addip addcons;"		\
-			"bootm ${kernel_addr}\0"			\
-		"prg_uboot=tftpboot ${loadaddr} ${uboot}; "		\
-			"protect off ${uboot_addr} 0xa003ffff; "	\
-			"erase ${uboot_addr} 0xa003ffff; "		\
+			ENV_UNPROTECT_UBOOT				\
+			ENV_ERASE_UBOOT					\
 			"cp.b ${loadaddr} ${uboot_addr} ${filesize}; "	\
 			"setenv filesize; saveenv\0"			\
+		"prg_kernel=tftpboot ${loadaddr} ${kernel}; "		\
+			ENV_UNPROTECT_KERNEL				\
+			ENV_ERASE_KERNEL				\
+			"cp.b ${loadaddr} ${kernel_addr} ${filesize}; "	\
+			"setenv filesize; saveenv\0"			\
 		"splashimage=A0A00000\0"
-#endif
+
 /*
  * add version variable to env - enables inclusion of
  * version info in flash env and reading from linux
