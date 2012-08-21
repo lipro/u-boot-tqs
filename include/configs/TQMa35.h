@@ -115,7 +115,11 @@
 	#define CONFIG_CMD_FAT		1
 #endif
 
+#if defined(CONFIG_TQMA35_MBA35CA)
+#define CONFIG_BOOTDELAY	1
+#else
 #define CONFIG_BOOTDELAY	3
+#endif
 
 #define CONFIG_LOADADDR		0x80800000	/* loadaddr env var */
 
@@ -143,8 +147,22 @@
 #define SPLASH_MTD_SIZE
 #endif
 
+#if defined(CONFIG_TQMA35_MBA35CA)
+#define ENV_HOSTNAME "hostname=tqma35-mba35ca\0"
+#define ENV_BOOTCMD  "bootcmd=bootm ${kernel_addr}\0"
+#define ENV_BOOTARGS_FIX \
+		"bootargs=root=/dev/mmcblk1 rw rootwait "	\
+		"mtdparts=physmap-flash.0:256k(u-boot),256k(env),2560k(kernel),3M(splashimage),26M(jffs2) "\
+		"console=ttymxc0,115200 "		\
+		"otg_mode=host;\0"
+#else
+#define ENV_HOSTNAME "hostname=tqma35\0"
+#define ENV_BOOTCMD "bootcmd=run net_nfs\0"
+#define ENV_BOOTARGS_FIX
+#endif
+
 #define CONFIG_EXTRA_ENV_SETTINGS					\
-		"hostname=tqma35\0"					\
+		ENV_HOSTNAME						\
 		"netdev=eth0\0"						\
 		ENV_CONSOLE						\
 		"uboot_addr=0xa0000000\0"				\
@@ -163,10 +181,11 @@
 			":${hostname}:${netdev}:off panic=1\0"		\
 		"addcons=setenv bootargs ${bootargs} "			\
 			"console=${console},${baudrate}\0"		\
+		ENV_BOOTARGS_FIX					\
 		"bootargs_base=setenv bootargs console=ttymxc0,115200\0"\
 		"bootargs_nfs=setenv bootargs ${bootargs} root=/dev/nfs "\
 			"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0"\
-		"bootcmd=run net_nfs\0"					\
+		ENV_BOOTCMD						\
 		"flash_nfs=run nfsargs addip addcons;"			\
 			"bootm ${kernel_addr}\0"			\
 		"net_nfs=run nfsargs addip addcons; "			\
