@@ -3329,6 +3329,8 @@ TQMa35_config	: unconfig
 		  $(XECHO) "... TQMa35-AB 256 MiB mDDR" ; \
 		  echo "#define CONFIG_TQMA35_MBA35CA 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35 MBA35-CA mainboard" ; \
+		  echo "#define CONFIG_TQMA35_LCD 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 with LCD" ; \
 		}
 	@[ -z "$(findstring _TTYS0_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_TTYS0 1"	>>$(obj)include/config.h ; \
