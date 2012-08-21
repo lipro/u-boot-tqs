@@ -126,11 +126,22 @@
 #endif
 
 #define ENV_KERNEL_ADDR "kernel_addr=0xa0080000\0"
-#define ENV_RAMDSK_ADDR "ramdisk_addr=0xa0300000\0"
 #define ENV_UNPROTECT_UBOOT "protect off ${uboot_addr} 0xa003ffff; "
 #define ENV_ERASE_UBOOT "erase ${uboot_addr} 0xa003ffff; "
 #define ENV_UNPROTECT_KERNEL "protect off ${kernel_addr} 0xa02fffff; "
 #define ENV_ERASE_KERNEL "erase ${kernel_addr} 0xa02fffff; "
+
+#ifdef CONFIG_TQMA35_LCD
+#define ENV_SPLASHIMAGE "splashimage=a0300000\0"
+#define ENV_RAMDSK_ADDR "ramdisk_addr=0xa0600000\0"
+#define SPLASH_SIZE	(3 * 1024 * 1024)
+#define SPLASH_MTD_SIZE "3M(splashimage),"
+#else
+#define ENV_SPLASHIMAGE
+#define ENV_RAMDSK_ADDR "ramdisk_addr=0xa0300000\0"
+#define SPLASH_SIZE	(0)
+#define SPLASH_MTD_SIZE
+#endif
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 		"hostname=tqma35\0"					\
@@ -139,6 +150,7 @@
 		"uboot_addr=0xa0000000\0"				\
 		ENV_KERNEL_ADDR						\
 		ENV_RAMDSK_ADDR						\
+		ENV_SPLASHIMAGE						\
 		"uboot=u-boot.bin\0"					\
 		"kernel=uImage\0"					\
 		"rootpath=/opt/ltib/rootfs\0"				\
@@ -170,8 +182,7 @@
 			ENV_UNPROTECT_KERNEL				\
 			ENV_ERASE_KERNEL				\
 			"cp.b ${loadaddr} ${kernel_addr} ${filesize}; "	\
-			"setenv filesize; saveenv\0"			\
-		"splashimage=A0A00000\0"
+			"setenv filesize; saveenv\0"
 
 /*
  * add version variable to env - enables inclusion of
@@ -326,7 +337,12 @@
 /* default mapping u-boot -> linux */
 #define MTDIDS_DEFAULT		"nor0=physmap-flash.0"
 /* default partition scheme */
-#define MTDPARTS_DEFAULT	"mtdparts=physmap-flash.0:256k(u-boot),256k(env),2560k(kernel),-(jffs2)"
+#define MTDPARTS_DEFAULT	"mtdparts=physmap-flash.0:"	\
+				"256k(u-boot),"			\
+				"256k(env),"			\
+				"2560k(kernel),"		\
+				SPLASH_MTD_SIZE			\
+				"-(jffs2)"
 
 #ifndef CONFIG_TQMA35_UBI
 /*

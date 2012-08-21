@@ -3339,12 +3339,16 @@ TQMa35_config	: unconfig
 		  $(XECHO) "... TQMa35-AA 128 MiB mDDR" ; \
 		  echo "#define CONFIG_TQMA35_USE_SMC9118 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35 SMC9118" ; \
+		  echo "#define CONFIG_TQMA35_LCD 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 with LCD" ; \
 		}
 	@[ -z "$(findstring _AB_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_AB 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35-AB 256 MiB mDDR" ; \
 		  echo "#define CONFIG_TQMA35_USE_SMC9118 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35 SMC9118" ; \
+		  echo "#define CONFIG_TQMA35_LCD 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 with LCD" ; \
 		}
 	@$(MKCONFIG) -n $@ -a TQMa35 arm arm1136 tqma35 tqc mx35
 
