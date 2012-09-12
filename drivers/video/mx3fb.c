@@ -117,8 +117,21 @@ void lcd_panel_disable(void)
 #define XRES		640
 #define YRES		480
 #define PANEL_TYPE	IPU_PANEL_TFT
-#define PIXEL_CLK	39721		/* pixel clock period in fs */
+
 #define PIXEL_FMT	IPU_PIX_FMT_RGB666
+
+#if defined(CONFIG_TQMA35_MBA35CA)
+
+#define H_START_WIDTH	114		/* left_margin */
+#define H_SYNC_WIDTH	30		/* hsync_len */
+#define H_END_WIDTH	(16 + H_SYNC_WIDTH)	/* right_margin + hsync_len */
+#define V_START_WIDTH	32		/* upper_margin */
+#define V_SYNC_WIDTH	3		/* vsync_len */
+#define V_END_WIDTH	(10 + V_SYNC_WIDTH)	/* lower_margin + vsync_len */
+#define SIG_POL		(DI_D3_DRDY_SHARP_POL | DI_D3_CLK_POL)
+
+#else
+
 #define H_START_WIDTH	128		/* left_margin */
 #define H_SYNC_WIDTH	1		/* hsync_len */
 #define H_END_WIDTH	(32 + H_SYNC_WIDTH)	/* right_margin + hsync_len */
@@ -126,6 +139,10 @@ void lcd_panel_disable(void)
 #define V_SYNC_WIDTH	1		/* vsync_len */
 #define V_END_WIDTH	(32 + V_SYNC_WIDTH)	/* lower_margin + vsync_len */
 #define SIG_POL		(DI_D3_DRDY_SHARP_POL)
+
+#endif
+
+#define PIXEL_CLK	39721		/* pixel clock period in ns */
 #define IF_CONF		0
 #define IF_CLK_DIV	85 /* (133000000(=HSP_CLK) * 16 * PIXEL_CLK * 10e-12) */
 #else
@@ -218,14 +235,22 @@ static struct pixel_fmt_cfg fmt_cfg[] = {
 		0x1600AAAA, 0x00E05555, 0x00070000, 3,
 	},
 	[IPU_PIX_FMT_RGB666] = {
-#ifdef CONFIG_MX35
+#if defined(CONFIG_TQMA35_AA) || defined(CONFIG_TQMA35_AB)
 		0x00050000, 0x000D0000, 0x00150000, 1,
+#elif defined(CONFIG_TQMA35_MBA35CA)
+		0x00050000, 0x000D0000, 0x00150000, 1,	/* RGB666 TQMa35 / MBa35-CA */
 #else
 		0x0005000F, 0x000B000F, 0x0011000F, 1,
 #endif
 	},
 	[IPU_PIX_FMT_BGR666] = {
+#if defined(CONFIG_TQMA35_AA) || defined(CONFIG_TQMA35_AB)
+		0x00070000, 0x000F0000, 0x00170000, 1,	/* BGR666 TQMa35 MBa35 */
+#elif defined(CONFIG_TQMA35_MBA35CA)
+		0x00070000, 0x000F0000, 0x00170000, 1,	/* BGR666 TQMa35 / MBa35-CA */
+#else
 		0x0011000F, 0x000B000F, 0x0005000F, 1,
+#endif
 	},
 	[IPU_PIX_FMT_RGB565] = {
 		0x0004003F, 0x000A000F, 0x000F003F, 1,
