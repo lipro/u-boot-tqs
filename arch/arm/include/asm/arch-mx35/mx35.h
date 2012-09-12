@@ -186,6 +186,10 @@
 #define GPIO_PORT_NUM	3
 #define GPIO_NUM_PIN	32
 
+#define GPIO_DR         0x00000000      /* data register */
+#define GPIO_GDIR       0x00000004      /* direction register */
+#define GPIO_PSR        0x00000008      /* pad status register */
+
 #define CHIP_REV_1_0		0x10
 #define CHIP_REV_2_0		0x20
 
@@ -254,5 +258,31 @@ extern int is_soc_rev(int rev);
 		if (is_soc_rev(CHIP_REV_2_0) < 0) \
 			*l2cc_ctl = 1;\
 	}
+
+enum mx35_gpio_direction {
+	MX35_GPIO_DIRECTION_IN,
+	MX35_GPIO_DIRECTION_OUT,
+};
+
+#ifdef CONFIG_MX35_GPIO
+extern int mx35_gpio_direction(unsigned int gpio,
+			       enum mx35_gpio_direction direction);
+extern void mx35_gpio_set(unsigned int gpio, unsigned int value);
+extern int mx35_gpio_get(unsigned int gpio);
+#else
+static inline int mx35_gpio_direction(unsigned int gpio,
+				      enum mx35_gpio_direction direction)
+{
+	return 1;
+}
+static inline int mx35_gpio_get(unsigned int gpio)
+{
+	return 1;
+}
+static inline void mx35_gpio_set(unsigned int gpio, unsigned int value)
+{
+}
+#endif
+
 #endif /* __ASSEMBLER__*/
 #endif /* __ASM_ARCH_MX35_H */

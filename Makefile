@@ -3331,6 +3331,8 @@ TQMa35_config	: unconfig
 		  $(XECHO) "... TQMa35 MBA35-CA mainboard" ; \
 		  echo "#define CONFIG_TQMA35_LCD 1"	>>$(obj)include/config.h ; \
 		  $(XECHO) "... TQMa35 with LCD" ; \
+		  echo "#define CONFIG_MX35_GPIO 1"	>>$(obj)include/config.h ; \
+		  $(XECHO) "... TQMa35 with GPIO support" ; \
 		}
 	@[ -z "$(findstring _TTYS0_,$@)" ] || \
 		{ echo "#define CONFIG_TQMA35_TTYS0 1"	>>$(obj)include/config.h ; \
