@@ -255,9 +255,13 @@ int board_mmc_init(void)
 	esdhc_gpio_init(0);
 	fsl_esdhc_mmc_init(gd->bd);
 
+#if defined(CONFIG_TQMA35_MBA35CA)
+/* do not init eMMC since 24V outputs on SD3_BUS on Rev.0200 */
+#
+#else
 	esdhc_gpio_init(1);
 	fsl_esdhc_mmc_init(gd->bd);
-
+#endif
 	return 0;
 }
 #endif
@@ -278,6 +282,24 @@ int board_init(void)
 	__REG(CCM_BASE_ADDR + CLKCTL_CGR0) |= 0x003F0000;
 	__REG(CCM_BASE_ADDR + CLKCTL_CGR1) |= 0x00030FFF;
 
+#if defined(CONFIG_TQMA35_MBA35CA)
+#if 0
+	/* REVISION_DETECT */
+	pad = PAD_CTL_100K_PU | PAD_CTL_PKE_ENABLE | PAD_CTL_SRE_FAST |
+		PAD_CTL_PUE_KEEPER | PAD_CTL_HYS_SCHMITZ;
+
+	mxc_request_iomux(MX35_PIN_FSR, MUX_CONFIG_GPIO);
+	mxc_iomux_set_pad(MX35_PIN_FSR, pad);
+	mxc_iomux_set_input(MUX_IN_GPIO1_IN_4, INPUT_CTL_PATH1);
+	mx35_gpio_direction(4, MX35_GPIO_DIRECTION_IN);
+	mba35ca_rev = (mx35_gpio_get(4)) ? 200 : 300;
+#endif
+	/* LCD_RST */
+	mxc_request_iomux(MX35_PIN_MLB_SIG, MUX_CONFIG_GPIO);
+	mxc_iomux_set_input(MUX_IN_GPIO3_IN_5, INPUT_CTL_PATH1);
+	mx35_gpio_set(69, 0);
+	mx35_gpio_direction(69, MX35_GPIO_DIRECTION_OUT);
+#endif
 	/* setup pins for I2C1 */
 	mxc_request_iomux(MX35_PIN_I2C1_CLK, MUX_CONFIG_SION);
 	mxc_request_iomux(MX35_PIN_I2C1_DAT, MUX_CONFIG_SION);
@@ -416,6 +438,10 @@ int board_init(void)
 	gd->bd->bi_arch_number = MACH_TYPE_TQMA35;	/* board id for linux */
 	gd->bd->bi_boot_params = 0x80000100;	/* address of boot parameters */
 
+#if defined(CONFIG_TQMA35_MBA35CA)
+	/* LCD_RST */
+	mx35_gpio_set(69, 1);
+#endif
 	return 0;
 }
 
@@ -513,7 +539,11 @@ int board_late_init(void)
 
 int checkboard(void)
 {
+#if defined(CONFIG_TQMA35_MBA35CA)
+	printf("Board: TQMa35 / MBa35-CA ");
+#else
 	printf("Board: TQMa35 [");
+#endif
 
 	if (system_rev & CHIP_REV_2_0)
 		printf("2.0 [");
