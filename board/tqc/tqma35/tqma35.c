@@ -155,7 +155,7 @@ int dram_init(void)
 
 u32 *imx_esdhc_base_addr;
 
-int esdhc_gpio_init(u32  interface_esdhc)
+static int esdhc_gpio_init(u32  interface_esdhc)
 {
 	switch (interface_esdhc) {
 	case 0:
